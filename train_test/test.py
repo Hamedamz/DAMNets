@@ -38,6 +38,7 @@ def test(net, source_dataloader, target_dataloader, device):
         # Setup hyperparameters
         p = float(batch_idx) / len(target_dataloader)
         lamda = 2. / (1. + np.exp(-10 * p)) - 1.
+        plasticity = 1
         # Get input data along with corresponding label
         target_input, target_label = source_data
         # Transfer data to PyTorch tensor and define PyTorch Variable for target predicted labels
@@ -48,7 +49,7 @@ def test(net, source_dataloader, target_dataloader, device):
             target_input, target_label = Variable(target_input), Variable(target_label)
             target_labels = Variable(torch.zeros((target_input.size()[0])).type(torch.LongTensor))
         # Compute target accuracy both for label and domain predictions
-        target_label_pred, target_domain_pred = net(target_input, lamda)
+        target_label_pred, target_domain_pred = net(target_input, lamda, plasticity)
         target_label_pred = target_label_pred.data.max(1, keepdim=True)[1]
         target_label_correct += target_label_pred.eq(target_label.data.view_as(target_label_pred)).cpu().sum()
         target_domain_pred = target_domain_pred.data.max(1, keepdim=True)[1]
