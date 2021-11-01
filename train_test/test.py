@@ -38,7 +38,7 @@ def test(net, source_dataloader, target_dataloader, device):
         # Setup hyperparameters
         p = float(batch_idx) / len(target_dataloader)
         lamda = 2. / (1. + np.exp(-10 * p)) - 1.
-        plasticity = 1
+        plasticity = 1 - p
         # Get input data along with corresponding label
         target_input, target_label = source_data
         # Transfer data to PyTorch tensor and define PyTorch Variable for target predicted labels
